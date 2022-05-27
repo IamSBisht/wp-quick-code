@@ -1,0 +1,32 @@
+*{
+   box-sizing: border-box;
+   margin: 0;
+   padding: 0;
+}
+.container {
+   max-width: 960px;
+   margin-inline: auto;
+   position: relative;
+   top: 50px;
+}
+
+body {
+   background: #000;
+   font-family: 'Poppins', 'san-serif';
+}
+.code-block {
+   background: #b0c4b1;
+   color: #4a5759;
+   padding: 10px 30px;
+}
+
+.title {
+   font-weight: 600;
+   margin-bottom: 20px;
+}
+
+
+.copy-to-clipboard-button {
+   color: #fff !important;
+}
+
