@@ -18,8 +18,9 @@
 
 <body>
    <div class="container">
+
       <div class="code-block">
-         <div class="title">The famouse wordpress loop</div>
+         <div class="title">The Wordpress Loop</div>
          <div class="function">
             <pre><code class="line-numbers language-php">while(have_posts()) { 
 the_post(); 
@@ -28,13 +29,183 @@ the_content();
 }</code></pre>
          </div>
       </div>
+
       <div class="code-block">
          <div class="title">Common Functions</div>
          <div class="function">
-            <pre><code class="line-numbers language-php">get_header(); //header.language-php
-get_footer(); //footer.php
-wp_head(); //add in head tag to load to load css files, etc.
+            <pre><code class="line-numbers language-php">get_header(); //load header.php 
 
+get_footer(); //load footer.php
+
+//add in head tag to load css, plugin related file etc.
+wp_head(); 
+
+//add right before closing body tag to load footer files like scripts.
+wp_footer(); 
+
+the_title(); //page or post title
+
+the_content(); //Page or post content
+
+the_permalink(); //page or post link
+
+//retrieves theme root path
+get_theme_file_uri(); 
+get_theme_file_uri('/assest/image/image.png');
+
+site_url(); //home url
+site_url('/about-us');
+
+get_the_ID(); //Id of current Page
+
+//Parent page id of current page it also check if it's child page
+wp_get_post_parent_id(get_the_ID());
+
+wp_list_pages(); //List all wordpress pages
+
+the_time('d-M-Y') //Date of Post
+
+get_the_category_list(', '); //echo to get category of post
+
+the_author_posts_link(); //Get author name and author archive page link
+
+the_archive_title(); //Get archive page title on archive.php file
+
+the_archive_description(); //Get description of cat, bio of author, etc. in archive page
+
+echo wp_trim_words(get_the_content(), 18); //limit content length;
+
+echo paginate_links();  //pagination link
+</code></pre>
+         </div>
+      </div>
+
+      <div class="code-block">
+         <div class="title">Add Scripts and CSS Files</div>
+         <div class="function">
+            <pre><code class="line-numbers language-php">function theme_files() {
+//stylesheets
+wp_enqueue_style('theme_main_style', get_stylesheet_uri());  
+wp_enqueue_style('another_style', get_theme_file_uri('/assest/css/style.js'), ['dependancy']);  
+
+//js
+wp_enqueue_script('uniqu-name', get_theme_file_uri('/assest/js/function.js'), NULL, '1.0', true);
+}
+
+add_action('wp_enqueue_scripts', 'theme_files');
+
+/*
+*you can also provide cdn path in place of get_stylesheet_uri
+*/
+</code></pre>
+         </div>
+      </div>
+
+      <div class="code-block">
+         <div class="title">Add theme features/ supports</div>
+         <div class="function">
+            <pre><code class="line-numbers language-php">function theme_features() {
+   add_theme_support('title-tag');
+
+   //Add theme support for custom Logo
+
+   $logo = array(
+      'width' => 120,
+      'height' => 120,
+      'flex-width' => true,
+   );
+   add_theme_support('custom-logo', $logo);
+
+   //Calling Logo
+   the_custom_logo();
+
+}
+add_action('after_setup_theme', 'theme_features')
+</code></pre>
+         </div>
+      </div>
+
+      <div class="code-block">
+         <div class="title">Add Menus Supports</div>
+         <div class="function">
+            <pre><code class="line-numbers language-php">function theme_features() {
+   register_nav_menu('headerMenuLocation', 'Header Menu Location')
+}
+add_action('after_setup_theme', 'theme_features')
+
+//Calling Menu
+wp_nav_menu(array(
+   'theme_location' => 'headerMenuLocation',
+));
+</code></pre>
+         </div>
+      </div>
+
+      <div class="code-block">
+         <div class="title">Display child pages link on children and Parent page</div>
+         <div class="function">
+            <pre><code class="line-numbers language-php">$parent = wp_get_post_parent_id(get_the_ID());
+$parent ? $findChildOf = $parent : $findChildOf = get_the_ID();
+wp_list_pages(array(
+   'title_li' => NULL,
+   'child_of' => $findChildOf;
+))
+</code></pre>
+         </div>
+      </div>
+
+      <div class="code-block">
+         <div class="title">Display Blog on any page with Custom Query</div>
+         <div class="function">
+            <pre><code class="line-numbers language-php">$homepagePosts = new WP_Query(array(
+   'post_per_page' => 2
+));
+while($homepagePosts->have_posts()){
+   $homepagePosts->the_post();
+   the_title();
+}
+
+wp_reset_postdata(); //Always reset data after custom query
+</code></pre>
+         </div>
+      </div>
+
+      <div class="code-block">
+         <div class="title">Registering and displaying custom post type</div>
+         <div class="function">
+            <pre><code class="line-numbers language-php">//Register custom post in function.php
+function theme_post_types(){
+   register_post_type('event', array(
+      'public' => true;
+      'labels' => array(
+         'name' => 'Events';
+         'add_new_item' => 'Add New Event',
+         'edit_item' => 'Edit Event',
+         'all_items' => 'All Events',
+         'singular_name' => 'Event',
+         ),
+      'supports' => array('title', 'editor', 'excerpt'),
+      'rewrite' => array('slug' => 'events'),
+      'has_archive' => true,
+      'menu_icon' => 'dashicons-calendar',
+   ));              
+}        
+add_action('init', 'theme_post_types');
+
+//Query custom post on any page
+$homePageEvents = new WP_Query(array(
+   'posts_per_page' => 2;
+   'post_type' => 'event'
+));
+
+while($homePageEvents->have_posts()){
+   $homePageEvents->the_post();
+      the_permalink();
+      the_title();
+      echo wp_trim_words(get_the_content(), 18);
+}
+
+wp_reset_postdata(); //Alwayse reset data after custom query
 </code></pre>
          </div>
       </div>
