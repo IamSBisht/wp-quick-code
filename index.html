@@ -176,9 +176,9 @@ wp_reset_postdata(); //Always reset data after custom query
             <pre><code class="line-numbers language-php">//Register custom post in function.php
 function theme_post_types(){
    register_post_type('event', array(
-      'public' => true;
+      'public' => true,
       'labels' => array(
-         'name' => 'Events';
+         'name' => 'Events',
          'add_new_item' => 'Add New Event',
          'edit_item' => 'Edit Event',
          'all_items' => 'All Events',
@@ -194,7 +194,7 @@ add_action('init', 'theme_post_types');
 
 //Query custom post on any page
 $homePageEvents = new WP_Query(array(
-   'posts_per_page' => 2;
+   'posts_per_page' => 2,
    'post_type' => 'event'
 ));
 
